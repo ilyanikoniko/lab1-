@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <random>
+#include <stdexcept>
+#include <cmath>
 template <typename T>
 
 class Vector {
@@ -9,6 +11,7 @@ class Vector {
 private:
     T* data;       // Указатель на данные (координаты вектора)
     size_t _size;  // Размерность (количество координат)
+    static constexpr T epsilon = 1e-4;
 public:
     size_t get_size() const 
     {
@@ -45,8 +48,8 @@ public:
 
     Vector(const Vector& other) : _size(other._size)
     {
-        data = new T[_size]
-            for (size_t i = 0, i < _size, ++i)
+        data = new T[_size];
+            for (size_t i = 0; i < _size; ++i)
             {
                 data[i] = other.data[i];
             }
@@ -72,7 +75,7 @@ public:
             throw std::invalid_argument("Вектора должны быть одинаковой размерности");
         }
         Vector result(_size, 0);
-        for (size_t i = 0, i < _size, ++i)
+        for (size_t i = 0; i < _size; ++i)
         {
             result[i] = data[i] + other.data[i];
         }
@@ -86,7 +89,7 @@ public:
             throw std::invalid_argument("Вектора должны быть одинаковой размерности");
         }
         Vector result(_size, 0);
-        for (size_t i = 0, i < _size, ++i)
+        for (size_t i = 0; i < _size; ++i)
         {
             result[i] = data[i] - other.data[i];
         }
@@ -100,7 +103,7 @@ public:
             throw std::invalid_argument("Вектора должны быть одинаковой размерности");
         }
         T result = 0;
-        for (size_t i = 0, i < _size, ++i)
+        for (size_t i = 0; i < _size; ++i)
         {
             result += data[i] * other.data[i];
         }
@@ -110,7 +113,7 @@ public:
     Vector operator* (T val) const
     {
         Vector result(_size, 0);
-        for (size_t i = 0, i < _size, ++i)
+        for (size_t i = 0; i < _size; ++i)
         {
             result[i] = val * data[i];
         }
@@ -130,12 +133,43 @@ public:
         }
 
         Vector result(_size, 0);
-        for (size_t i = 0, i < _size, ++i)
+        for (size_t i = 0; i < _size; ++i)
         {
             result[i] = data[i]/val;
         }
         return result;
     }
+
+    template <typename T>
+    T operator* (const Vector<std::complex<T>>& v1, const Vector<std::complex<T>>& v2) {
+        if (v1._size != v2._size) {
+            throw std::invalid_argument("Вектора должны быть одинаковой размерности для умножения");
+        }
+        T result = 0;
+        for (size_t i = 0; i < v1._size; ++i) {
+            result += std::real(v1[i]) * std::real(v2[i]) + std::imag(v1[i]) * std::imag(v2[i]);
+        }
+        return result;
+    }
+
+    bool operator== (const Vector& other) const
+    {
+        if (_size != other._size) 
+        {
+            throw std::invalid_argument("Нельзя сравнить вектора разной размерности");
+        }
+        if (std::abs(data[i] - other.data[i]) >= epsilon) {
+            return false;  
+        }
+    }
+    return true;
+
+    bool operator!= (const Vector& other) const
+    {
+        return !(*this == other);  
+    }
+
+
 };
 
 
