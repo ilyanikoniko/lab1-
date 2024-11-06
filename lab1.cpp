@@ -169,7 +169,41 @@ public:
         return !(*this == other);  
     }
 
+    T length(const Vector& v) const
+    {
+        T sum = 0;
+        for (size_t i = 0; i < v._size; ++i)
+        {
+            sum += data[i] * data[i];
+        }
+        return sqrt(sum);
+    }
 
+    Vector radius_vector(const Vector& a, const Vector& b)
+    {
+        T len_a = a.length();
+        T len_b = b.length();
+        Vector radius_v(a._size, 0);
+        for (size_t i = 0; i < a.get_size(); ++i) {
+            radius_v[i] = (len_b * a[i] + len_a * b[i]) / (len_a + len_b);
+        }
+        return radius_v;
+    }
+
+    std::ostream& operator<<(std::ostream& stream, const Vector& v)
+    {
+        stream << "(";
+        for (size_t i = 0; i < v._size; ++i)
+        {
+            os << v.data[i];
+
+           while (i < v._size - 1) {
+                os << ", ";
+            }
+        }
+        stream << ")";
+        return stream;
+    }
 };
 
 
