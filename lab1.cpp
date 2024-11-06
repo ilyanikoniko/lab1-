@@ -4,6 +4,7 @@
 #include <random>
 #include <stdexcept>
 #include <cmath>
+
 template <typename T>
 
 class Vector {
@@ -190,7 +191,7 @@ public:
         return radius_v;
     }
 
-    std::ostream& operator<<(std::ostream& stream, const Vector& v)
+    friend std::ostream& operator<<(std::ostream& stream, const Vector& v)
     {
         stream << "(";
         for (size_t i = 0; i < v._size; ++i)
@@ -205,5 +206,11 @@ public:
         return stream;
     }
 };
-
+int main()
+{
+    Vector<double> a(6,1); 
+    Vector<double> b(5,0); 
+    cout << a;
+    return 0;
+}
 
